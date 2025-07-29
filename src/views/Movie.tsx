@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import { RouteProp, useRoute } from '@react-navigation/native';
-import axios from 'axios';
+import axios from "./../utils/axios";
 import moment from 'moment';
 
 import { API_ROUTE } from '../config';
@@ -12,11 +12,13 @@ import Description from '../sections/movie/Description';
 import MoreInfo from '../sections/movie/MoreInfo';
 import { formatTimeDifference } from '../utils/util';
 import Season from '../sections/movie/Season';
+import Loading from '../components/Loading';
 
 function Movie() {
     const route = useRoute<RouteProp<EgpStackParamList, 'Movie'>>();
     const { movieId, startMoment, endMoment } = route.params;
 
+    const [loading, setLoading] = useState<boolean>(false);
     const [detail, setDetail] = useState<MovieDetail|null>(null);
 
     useEffect(() => {
@@ -31,7 +33,8 @@ function Movie() {
         if(endMoment.isBefore(now))
             route = 'program/program_catchup_id';
 
-        axios.get(API_ROUTE+route)
+        setLoading(true);
+        axios.get(route)
         .then(response => {
             const data = response.data;
             const start = moment(data.start);
@@ -54,8 +57,8 @@ function Movie() {
                 series: data.series
             });
         })
-        .catch(error => {
-            console.error('Error al obtener datos:', error);
+        .finally(()=>{
+            setLoading(false);
         });
     }, []);
 
@@ -63,18 +66,23 @@ function Movie() {
         return <></>;
     }
 
-    return (
-        <ScrollView style={styles.container}>
-            <ImageCover isLive={detail.isLive} isPast={detail.isPast} timeDiff={detail.timeDiff} />
-            <Detail detail={detail} isLive={detail.isLive} isFuture={detail.isFuture} />
-            <Description description={detail.description} />
-            <MoreInfo cast={detail.cast} creators={detail.creators} />
-            {
-                detail.isPast &&
-                <Season series={detail.series} />
-            }
-        </ScrollView>
-    );
+    return <>
+    {
+        loading ? 
+            <Loading/>
+        : 
+            <ScrollView style={styles.container}>
+                <ImageCover isLive={detail.isLive} isPast={detail.isPast} timeDiff={detail.timeDiff} />
+                <Detail detail={detail} isLive={detail.isLive} isFuture={detail.isFuture} />
+                <Description description={detail.description} />
+                <MoreInfo cast={detail.cast} creators={detail.creators} />
+                {
+                    detail.isPast &&
+                    <Season series={detail.series} />
+                }
+            </ScrollView>
+    }
+    </>;
 }
 
 const styles = StyleSheet.create({
