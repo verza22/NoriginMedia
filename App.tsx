@@ -1,7 +1,7 @@
 import React from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Navigator from './src/Navigator';
+import Navigator from './src/navigation/Navigator';
 
 function App() {
 
@@ -15,6 +15,7 @@ function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "black"
   },
 });
 

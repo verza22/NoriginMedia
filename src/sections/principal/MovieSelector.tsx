@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Text, StyleSheet, View, ScrollView } from 'react-native';
+import { StyleSheet, View, ScrollView } from 'react-native';
 import moment from 'moment';
 import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import { MINUTES_TOTAL, PIXELS_PER_MINUTE } from '../../config';
+import { API_ROUTE, MINUTES_TOTAL, PIXELS_PER_MINUTE } from '../../config';
 
 import HourBar from '../../components/HourBar';
 import ChannelList from '../../components/ChannelList';
@@ -12,20 +14,20 @@ import MovieRow from '../../components/MovieRow';
 const timelineWidth = MINUTES_TOTAL * PIXELS_PER_MINUTE;
 
 function TVGuide() {
-  const [channels, setChannels] = useState<any[]>([]);
-  const [now, setNow] = useState(moment());
+  const [channels, setChannels] = useState<Channel[]>([]);
+  const navigation = useNavigation<NativeStackNavigationProp<EgpStackParamList>>();
 
   useEffect(() => {
-    setNow(moment());
+    const now = moment();
 
-    axios.get('http://192.168.1.136:1337/epg')
+    axios.get(API_ROUTE+'epg')
       .then(response => {
         const apiData = response.data;
 
-        const processed = apiData.channels.map((channel: any) => ({
+        const processed: Channel[] = apiData.channels.map((channel: any):Channel => ({
           channel: channel.title,
           icon: 'television-classic',
-          movies: channel.schedules.map((movie: any) => {
+          movies: channel.schedules.map((movie: any): Movie => {
             const start = moment(movie.start);
             let end = moment(movie.end);
             if (end.isBefore(start)) {
@@ -33,17 +35,17 @@ function TVGuide() {
             }
             const duration = end.diff(start, 'minutes');
             return {
+              id: movie.id,
               title: movie.title,
               start: start.format('HH:mm'),
               end: end.format('HH:mm'),
               startMoment: start,
               endMoment: end,
-              duration
+              duration,
+              isLive: now.isBetween(start, end)
             };
           }),
         }));
-
-        console.log(processed)
 
         setChannels(processed);
       })
@@ -51,6 +53,10 @@ function TVGuide() {
         console.error('Error al obtener datos:', error);
       });
   }, []);
+
+  const selectMovie = (movie: Movie) => {
+    navigation.navigate("Movie", { movieId: movie.id, startMoment: movie.startMoment, endMoment: movie.endMoment });
+  }
 
   return (
     <View style={styles.container}>
@@ -61,7 +67,7 @@ function TVGuide() {
             <View style={{ width: timelineWidth }}>
               <HourBar />
               {channels.map((channel, idx) => (
-                <MovieRow key={idx} movies={channel.movies} now={now} />
+                <MovieRow key={idx} movies={channel.movies} selectMovie={selectMovie} />
               ))}
             </View>
           </ScrollView>

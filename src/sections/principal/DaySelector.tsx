@@ -76,7 +76,7 @@ function DaySelector() {
 const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
-        backgroundColor: "black"
+        backgroundColor: "#1E1E1E"
     },
     star: {
         width: 80,
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
         color: "gray"
     },
     containerDay: {
-        backgroundColor: "black",
+        backgroundColor: "#1E1E1E",
         paddingVertical: 14,
         alignItems: 'center'
     },

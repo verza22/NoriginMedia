@@ -1,31 +1,31 @@
 import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import moment from 'moment';
 import { PIXELS_PER_MINUTE } from '../config';
 
 function MovieRow({
   movies,
-  now,
+  selectMovie
 }: {
-  movies: any[];
-  now: moment.Moment;
+  movies: Movie[];
+  selectMovie: (movie: Movie) => void
 }) {
   return (
     <View style={styles.timelineRow}>
       {movies.map((movie, index) => {
         const startMinutes = movie.startMoment.diff(movie.startMoment.clone().startOf('day'), 'minutes');
         const left = startMinutes * PIXELS_PER_MINUTE;
-        const isPlaying = now.isBetween(movie.startMoment, movie.endMoment);
 
         return (
-          <View
+          <TouchableOpacity
             key={index}
+            onPress={()=> selectMovie(movie)}
             style={[
               styles.movieContainer,
               {
                 width: movie.duration * PIXELS_PER_MINUTE,
                 left,
-                backgroundColor: isPlaying ? '#cecece' : 'black',
+                backgroundColor: movie.isLive ? '#cecece' : 'black',
               },
             ]}
           >
@@ -33,7 +33,7 @@ function MovieRow({
             <Text style={styles.movieTime}>
               {movie.start} - {movie.end}
             </Text>
-          </View>
+          </TouchableOpacity>
         );
       })}
     </View>
