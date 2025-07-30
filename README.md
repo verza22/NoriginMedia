@@ -125,7 +125,7 @@ Please refer to these images to understand the app's UI and features.
 - At the top, there is a date selector; however, it currently has no functionality as the API always returns data for the current day.
 - On the right side, a list of movies or shows is displayed in their respective time slots.
 - There is a "Now" button at the bottom left that allows you to jump directly to the movies currently being broadcast.
-- A vertical line indicates the current time on the schedule.
+- A vertical purple line indicates the current time on the schedule, and it automatically updates as time progresses.
 - You can refresh the data by pulling down completely when at the top of the list.
 
 - The Norigin Media company icon was updated because the previous one was no longer available.
