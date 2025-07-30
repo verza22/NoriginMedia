@@ -7,6 +7,7 @@ Information:
 ---
 <details>
 <summary>📱 App Setup</summary>
+
 Make sure you’ve followed the official setup:
 https://reactnative.dev/docs/environment-setup
 
@@ -31,7 +32,7 @@ https://reactnative.dev/docs/environment-setup
     npm run android
 
     or
-    
+
     yarn android
 
 4. Reload / Refresh:
@@ -45,9 +46,11 @@ https://reactnative.dev/docs/environment-setup
 5. Modify your app:
 
     Edit `App.tsx` and save to see changes via Fast Refresh.
+
 </details>
 
 ---
+
 <details>
 <summary>📡 Mock API Setup (EPG Data)</summary>
 
@@ -80,6 +83,7 @@ Notes:
 
 <details>
 <summary>⚙️ App Configuration</summary>
+
 1. Locate the file:
 
     /src/config.ts
