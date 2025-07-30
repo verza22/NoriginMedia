@@ -13,19 +13,25 @@ https://reactnative.dev/docs/environment-setup
 1. Install dependencies:
 
     npm install
+
     or
+
     yarn
 
 2. Start Metro (Dev Server):
 
     npm start
+
     or
+
     yarn start
 
 3. Run the App on Android:
 
     npm run android
+
     or
+    
     yarn android
 
 4. Reload / Refresh:
