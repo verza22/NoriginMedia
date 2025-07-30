@@ -3,35 +3,44 @@ import { View, Text, StyleSheet } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import EgpStack from "./EgpStack";
+import EgpStack from './EgpStack';
 import Header from '../components/Header';
+import { useTheme } from '../theme/ThemeContext';
 
 const Tab = createBottomTabNavigator<tabNavigatorParamList>();
 
-const MyTheme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    background: 'black'
-  },
-};
-
 function Screen() {
-  return <View style={styles.screen}><Text style={styles.text}>Screen</Text></View>;
+  const { colors } = useTheme();
+
+  return (
+    <View style={[styles.screen, { backgroundColor: colors.background }]}>
+      <Text style={{ color: colors.text }}>Screen</Text>
+    </View>
+  );
 }
 
 export default function Navigator() {
+  const { colors } = useTheme();
+
+  const MyTheme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      background: colors.background,
+    },
+  };
+
   return (
     <NavigationContainer theme={MyTheme}>
       <Tab.Navigator
         screenOptions={({ route }) => ({
-          headerShown: route.name !== "EGP",
+          headerShown: route.name !== 'EGP',
           tabBarShowLabel: false,
-          tabBarActiveTintColor: '#b454e9',
-          tabBarInactiveTintColor: '#999',
+          tabBarActiveTintColor: colors.primary,
+          tabBarInactiveTintColor: colors.inactive,
           header: () => <Header navigation={null} />,
           tabBarStyle: {
-            backgroundColor: '#1E1E1E',
+            backgroundColor: colors.card,
             borderTopWidth: 0,
           },
           tabBarIcon: ({ color, size }) => {
@@ -56,7 +65,7 @@ export default function Navigator() {
                 break;
             }
 
-            return <Icon name={iconName as string} size={30} color={color} />;
+            return <Icon name={iconName} size={30} color={color} />;
           },
         })}
       >
@@ -75,9 +84,5 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: "black"
-  },
-  text: {
-    color: "white"
   }
 });

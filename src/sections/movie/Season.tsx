@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import { useTheme } from '../../theme/ThemeContext';
 
 function Season({ series }: { series: Season[] }) {
   const [selectedSeason, setSelectedSeason] = useState(0);
+  const { colors } = useTheme();
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -19,10 +15,13 @@ function Season({ series }: { series: Season[] }) {
             onPress={() => setSelectedSeason(index)}
             style={[
               styles.seasonBox,
-              selectedSeason === index && styles.selectedBox,
+              { borderColor: colors.text },
+              selectedSeason === index && { backgroundColor: colors.sidebarBorder },
             ]}
           >
-            <Text style={styles.text}>{season.title.toUpperCase()}</Text>
+            <Text style={{ color: colors.text }}>
+              {season.title.toUpperCase()}
+            </Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -30,7 +29,7 @@ function Season({ series }: { series: Season[] }) {
       <View style={styles.episodesContainer}>
         {series[selectedSeason].episodes.map((episode, idx) => (
           <TouchableOpacity key={idx} style={styles.episode}>
-            <Text style={styles.text}>
+            <Text style={{ color: colors.text }}>
               Episode {idx + 1} {episode.title}
             </Text>
           </TouchableOpacity>
@@ -43,7 +42,7 @@ function Season({ series }: { series: Season[] }) {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 16,
-    marginBottom: 30
+    marginBottom: 30,
   },
   seasonContainer: {
     flexDirection: 'row',
@@ -52,21 +51,14 @@ const styles = StyleSheet.create({
   },
   seasonBox: {
     borderWidth: 1,
-    borderColor: 'white',
     padding: 6,
-    paddingHorizontal: 12
-  },
-  selectedBox: {
-    backgroundColor: '#333',
+    paddingHorizontal: 12,
   },
   episodesContainer: {
     marginTop: 20,
   },
   episode: {
     paddingVertical: 8,
-  },
-  text: {
-    color: 'white',
   },
 });
 

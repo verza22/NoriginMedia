@@ -1,8 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Animated, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useTheme } from '../theme/ThemeContext';
 
 const Loading = () => {
+  const { colors } = useTheme();
   const rotation = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -24,7 +26,7 @@ const Loading = () => {
   return (
     <View style={styles.container}>
       <Animated.View style={{ transform: [{ rotate: rotateInterpolation }] }}>
-        <Icon name="loading" size={40} color="#555" />
+        <Icon name="loading" size={40} color={colors.gray} />
       </Animated.View>
     </View>
   );

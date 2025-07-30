@@ -1,97 +1,132 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+Norigin Media code challenge - Quick start guide
+========================================
 
-# Getting Started
+Information:
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
 
-## Step 1: Start Metro
+---
+<details>
+<summary>📱 App Setup</summary>
+Make sure you’ve followed the official setup:
+https://reactnative.dev/docs/environment-setup
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+1. Install dependencies:
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+    npm install
+    # or
+    yarn
 
-```sh
-# Using npm
-npm start
+2. Start Metro (Dev Server):
 
-# OR using Yarn
-yarn start
-```
+    npm start
+    # or
+    yarn start
 
-## Step 2: Build and run your app
+3. Run the App on Android:
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+    npm run android
+    # or
+    yarn android
 
-### Android
+4. Reload / Refresh:
 
-```sh
-# Using npm
-npm run android
+    Android:
+    - Double press "R"
+    - OR open the developer menu with:
+        - Cmd ⌘ + M (macOS)
+        - Ctrl + M (Windows/Linux)
 
-# OR using Yarn
-yarn android
-```
+5. Modify your app:
 
-### iOS
+    Edit `App.tsx` and save to see changes via Fast Refresh.
+</details>
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+---
+<details>
+<summary>📡 Mock API Setup (EPG Data)</summary>
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+1. Clone the mock-api with the correct branch "cloudberry":
 
-```sh
-bundle install
-```
+    git clone -b cloudberry https://github.com/NoriginMedia/mock-api.git
+    cd mock-api
 
-Then, and every time you update your native dependencies, run:
+2. Install dependencies:
 
-```sh
-bundle exec pod install
-```
+    npm install
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+3. Start the mock API server:
 
-```sh
-# Using npm
-npm run ios
+    npm run start
 
-# OR using Yarn
-yarn ios
-```
+    The server will run on port 1337.
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+    → Mock service running at: http://localhost:1337
+    → Try it: http://localhost:1337/epg
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+Notes:
+------
+- Make sure Node.js is installed before running the mock API.
+- If you're not familiar with NPM, visit: https://docs.npmjs.com/
 
-## Step 3: Modify your app
+</details>
 
-Now that you have successfully run the app, let's make changes!
+---
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+<details>
+<summary>⚙️ App Configuration</summary>
+1. Locate the file:
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+    /src/config.ts
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+2. Find the `API_ROUTE` parameter.
 
-## Congratulations! :tada:
+3. If using a physical device:
+   - Get your computer's local IP (e.g., 192.168.x.x)
+   - Replace the value of `API_ROUTE` with:
 
-You've successfully run and modified your React Native App. :partying_face:
+        export const API_ROUTE = "http://192.168.x.x:1337";
 
-### Now what?
+4. If using an emulator (virtual device), leave it as:
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+        export const API_ROUTE = "http://localhost:1337";
 
-# Troubleshooting
+</details>
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+---
 
-# Learn More
+<details>
+<summary>📷 Screenshots</summary>
 
-To learn more about React Native, take a look at the following resources:
+You can find screenshots demonstrating the app's functionality in the following folder:
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+    /screenshots
+
+Please refer to these images to understand the app's UI and features.
+
+</details>
+
+---
+
+<details>
+<summary>📝 Final Notes on App Functionality</summary>
+
+- At the bottom of the app, there are 5 icons. Select the 3rd icon to display the TV channel programming guide.
+- On the left side, different channels are shown using icons because the original images from the API are no longer available.
+- At the top, there is a date selector; however, it currently has no functionality as the API always returns data for the current day.
+- On the right side, a list of movies or shows is displayed in their respective time slots.
+- There is a "Now" button at the bottom left that allows you to jump directly to the movies currently being broadcast.
+- A vertical line indicates the current time on the schedule.
+- You can refresh the data by pulling down completely when at the top of the list.
+
+- The Norigin Media company icon was updated because the previous one was no longer available.
+- The primary color was changed to better match the logo.
+
+- There are three ways to view movie details:
+  1. Selecting a movie that has already aired (before the current purple line) shows past details including season information.
+  2. Selecting a movie currently airing displays live details.
+  3. Selecting a movie airing in the future shows upcoming movie information.
+
+Thank you very much for the opportunity to complete this technical test.  
+If you have any questions or feedback, please feel free to contact me via email or open an issue on GitHub.
+
+</details>

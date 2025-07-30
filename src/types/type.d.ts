@@ -25,7 +25,7 @@ type tabNavigatorParamList = {
 
 type EgpStackParamList = {
     Principal: undefined;
-    Movie: { movieId: string, startMoment: moment.Moment, endMoment: moment.Moment };
+    Movie: { movieId: string, startMoment: string, endMoment: string };
 };
 
 type Episode = {

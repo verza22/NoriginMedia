@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
 import { RouteProp, useRoute } from '@react-navigation/native';
-import axios from "./../utils/axios";
+import axios from './../utils/axios';
 import moment from 'moment';
-
-import { API_ROUTE } from '../config';
+import { useTheme } from '../theme/ThemeContext';
 
 import ImageCover from '../sections/movie/ImageCover';
 import Detail from '../sections/movie/Detail';
@@ -15,79 +14,81 @@ import Season from '../sections/movie/Season';
 import Loading from '../components/Loading';
 
 function Movie() {
-    const route = useRoute<RouteProp<EgpStackParamList, 'Movie'>>();
-    const { movieId, startMoment, endMoment } = route.params;
+  const { colors } = useTheme();
+  const route = useRoute<RouteProp<EgpStackParamList, 'Movie'>>();
+  const { movieId, startMoment, endMoment } = route.params;
 
-    const [loading, setLoading] = useState<boolean>(false);
-    const [detail, setDetail] = useState<MovieDetail|null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [detail, setDetail] = useState<MovieDetail | null>(null);
 
-    useEffect(() => {
-        const now = moment();
-        //We calculate again using the current date just in case there was a delay in selecting the program.
+  useEffect(() => {
+    const now = moment();
+    const start = moment(startMoment); 
+    const end = moment(endMoment); 
+    // We calculate again using the current date just in case there was a delay in selecting the program.
 
-        let route = 'program/'+movieId;//future
-        //live
-        if(now.isBetween(startMoment, endMoment))
-            route = 'program/program_live_id';
-        //past
-        if(endMoment.isBefore(now))
-            route = 'program/program_catchup_id';
+    let routeUrl = 'program/' + movieId; // future
+    // live
+    if (now.isBetween(start, end))
+      routeUrl = 'program/program_live_id';
+    // past
+    if (end.isBefore(now))
+      routeUrl = 'program/program_catchup_id';
 
-        setLoading(true);
-        axios.get(route)
-        .then(response => {
-            const data = response.data;
-            const start = moment(data.start);
-            let end = moment(data.end);
-            setDetail({
-                title: data.title,
-                description: data.description,
-                cast: data.meta.cast.map((x: any)=> x.name).join(", "),
-                creators: data.meta.creators.map((x: any)=> x.name).join(", "),
-                genres: data.meta.genres.filter((x: any, i: number)=> i < 3).join("  "),
-                channelTitle: data.channelTitle,
-                year: data.meta.year,
-                starTime: start.format('HH:mm'),
-                endTime: end.format('HH:mm'),
-                day: start.format('D MMM'),
-                isLive: now.isBetween(start, end),
-                isPast: end.isBefore(now),
-                isFuture: start.isAfter(now),
-                timeDiff: formatTimeDifference(end, now),
-                series: data.series
-            });
-        })
-        .finally(()=>{
-            setLoading(false);
+    setLoading(true);
+    axios.get(routeUrl)
+      .then(response => {
+        const data = response.data;
+        const start = moment(data.start);
+        let end = moment(data.end);
+        setDetail({
+          title: data.title,
+          description: data.description,
+          cast: data.meta.cast.map((x: any) => x.name).join(", "),
+          creators: data.meta.creators.map((x: any) => x.name).join(", "),
+          genres: data.meta.genres.filter((x: any, i: number) => i < 3).join("  "),
+          channelTitle: data.channelTitle,
+          year: data.meta.year,
+          starTime: start.format('HH:mm'),
+          endTime: end.format('HH:mm'),
+          day: start.format('D MMM'),
+          isLive: now.isBetween(start, end),
+          isPast: end.isBefore(now),
+          isFuture: start.isAfter(now),
+          timeDiff: formatTimeDifference(end, now),
+          series: data.series
         });
-    }, []);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
 
-    if(detail === null){
-        return <></>;
-    }
+  if (detail === null) {
+    return <></>;
+  }
 
-    return <>
+  return <>
     {
-        loading ? 
-            <Loading/>
-        : 
-            <ScrollView style={styles.container}>
-                <ImageCover isLive={detail.isLive} isPast={detail.isPast} timeDiff={detail.timeDiff} />
-                <Detail detail={detail} isLive={detail.isLive} isFuture={detail.isFuture} />
-                <Description description={detail.description} />
-                <MoreInfo cast={detail.cast} creators={detail.creators} />
-                {
-                    detail.isPast &&
-                    <Season series={detail.series} />
-                }
-            </ScrollView>
+      loading ?
+        <Loading />
+        :
+        <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
+          <ImageCover isLive={detail.isLive} isPast={detail.isPast} timeDiff={detail.timeDiff} />
+          <Detail detail={detail} isLive={detail.isLive} isFuture={detail.isFuture} />
+          <Description description={detail.description} />
+          <MoreInfo cast={detail.cast} creators={detail.creators} />
+          {
+            detail.isPast &&
+            <Season series={detail.series} />
+          }
+        </ScrollView>
     }
-    </>;
+  </>;
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'black',
     flex: 1,
   }
 });
